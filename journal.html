@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TraderFitness | Journal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar glass">
+      <h2>TraderFitness</h2>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="journal.html" class="active">Journal</a>
+      </nav>
+      <div id="userProfile" class="profile"></div>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <section class="glass journal-section">
+        <h2>Daily Trading Journal</h2>
+        <p>Capture your trading notes, emotional reflections, and screenshot evidence.</p>
+        <div id="journalEntries"></div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
