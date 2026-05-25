@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TraderFitness | Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar glass">
+      <h2>TraderFitness</h2>
+      <nav>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="journal.html">Journal</a>
+      </nav>
+      <div id="userProfile" class="profile"></div>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <section class="calendar-section glass">
+        <h3>Daily Consistency Calendar</h3>
+        <p>Select a day to log trades, emotions, workouts, and lessons.</p>
+        <div id="calendarGrid" class="calendar-grid"></div>
+      </section>
+
+      <section class="cards-grid" id="metricsGrid"></section>
+
+      <section class="daily-log glass">
+        <h3>Daily Reflection & Questions</h3>
+        <form id="dailyForm">
+          <div class="form-grid">
+            <label>Selected Date <input type="date" id="entryDate" required /></label>
+            <label>Add Trades <input type="number" id="tradeCount" min="0" value="0" /></label>
+            <label>Profit / Loss ($) <input type="number" id="profitLoss" step="0.01" value="0" /></label>
+            <label>Win Trades <input type="number" id="winTrades" min="0" value="0" /></label>
+            <label>Loss Trades <input type="number" id="lossTrades" min="0" value="0" /></label>
+            <label>Risk Reward Ratio <input type="number" id="rr" min="0" step="0.1" value="1" /></label>
+            <label>Emotional Score (1-10) <input type="number" id="emotionalScore" min="1" max="10" value="5" /></label>
+            <label>Discipline Score (1-10) <input type="number" id="disciplineScore" min="1" max="10" value="5" /></label>
+            <label>Confidence Score (1-10) <input type="number" id="confidenceScore" min="1" max="10" value="5" /></label>
+            <label>Stress Score (1-10) <input type="number" id="stressScore" min="1" max="10" value="5" /></label>
+            <label>Focus Score (1-10) <input type="number" id="focusScore" min="1" max="10" value="5" /></label>
+            <label>Sleep Hours <input type="number" id="sleepHours" min="0" max="24" step="0.5" value="8" /></label>
+            <label>Water Intake (L) <input type="number" id="waterIntake" min="0" step="0.1" value="2" /></label>
+          </div>
+
+          <div class="questions">
+            <h4>Daily Questions</h4>
+            <label>Did you follow your strategy? <select id="followStrategy"><option>Yes</option><option>No</option></select></label>
+            <label>Did you revenge trade? <select id="revengeTrade"><option>No</option><option>Yes</option></select></label>
+            <label>Did you overtrade? <select id="overtrade"><option>No</option><option>Yes</option></select></label>
+            <label>Did you respect stop loss? <select id="stopLoss"><option>Yes</option><option>No</option></select></label>
+            <label>Did you trade emotionally? <select id="tradeEmotionally"><option>No</option><option>Yes</option></select></label>
+            <label>Did you exercise today? <select id="exercise"><option>Yes</option><option>No</option></select></label>
+            <label>Did you meditate today? <select id="meditate"><option>Yes</option><option>No</option></select></label>
+            <label>Did you sleep properly? <select id="sleepProperly"><option>Yes</option><option>No</option></select></label>
+            <label>Mistake today <textarea id="mistake"></textarea></label>
+            <label>Lesson learned <textarea id="lesson"></textarea></label>
+            <label>Journal note <textarea id="journalNote"></textarea></label>
+            <label>Emotional note <textarea id="emotionalNote"></textarea></label>
+            <label>Upload screenshot <input id="screenshot" type="file" accept="image/*" /></label>
+          </div>
+
+          <button class="btn-primary" type="submit">Save Daily Entry</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
