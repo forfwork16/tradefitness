@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TraderFitness | Analytics</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar glass">
+      <h2>TraderFitness</h2>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analytics.html" class="active">Analytics</a>
+        <a href="journal.html">Journal</a>
+      </nav>
+      <div id="userProfile" class="profile"></div>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <h2>Performance Analytics</h2>
+      <div class="chart-grid">
+        <canvas id="weeklyProfitChart"></canvas>
+        <canvas id="monthlyPerformanceChart"></canvas>
+        <canvas id="emotionalTrendChart"></canvas>
+        <canvas id="disciplineTrendChart"></canvas>
+        <canvas id="fitnessCorrelationChart"></canvas>
+        <canvas id="streakHabitChart"></canvas>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
