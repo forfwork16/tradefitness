@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TraderFitness</title>
+  <style>
+    :root { --bg:#0b1020; --panel:#121a31cc; --text:#eaf0ff; --muted:#95a4c6; --accent:#6ee7ff; --good:#16c784; --bad:#ff5d73; }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:radial-gradient(circle at top,#1a2755,var(--bg));color:var(--text)}
+    .glass{background:var(--panel);backdrop-filter:blur(12px);border:1px solid #ffffff22;border-radius:16px;box-shadow:0 10px 30px #00000044}
+    .btn-primary,.btn-secondary{border:0;padding:.8rem 1rem;border-radius:10px;cursor:pointer;font-weight:600}
+    .btn-primary{background:var(--accent)} .btn-secondary{background:#2c365a;color:#fff}
+    .subtle{color:var(--muted)}
+    .hidden{display:none!important}
+
+    .auth-shell{min-height:100vh;display:grid;place-items:center;padding:1rem}
+    .brand-card{max-width:640px;padding:2rem}
+    .brand-card ul{padding-left:1.2rem}
+
+    .app-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;gap:1rem;padding:1rem}
+    .sidebar{padding:1rem}.sidebar nav{display:grid;gap:.5rem;margin:1rem 0}
+    .sidebar a{color:var(--text);text-decoration:none;padding:.6rem;border-radius:8px}
+    .sidebar a.active,.sidebar a:hover{background:#ffffff14}
+    .main-content{display:grid;gap:1rem}
+    .calendar-section,.daily-log,.journal-section{padding:1rem}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem}
+    .day-cell{padding:.6rem;background:#ffffff10;border-radius:8px;cursor:pointer;text-align:center;border:0;color:#fff}
+    .day-cell.active{outline:2px solid var(--accent)}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem}
+    .metric{padding:1rem}.metric .label{color:var(--muted);font-size:.9rem}.metric .value{font-size:1.5rem;font-weight:700}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}
+    .questions{display:grid;gap:.6rem;margin:1rem 0}label{display:grid;gap:.3rem}
+    input,select,textarea{background:#0d1530;border:1px solid #33406d;color:#fff;padding:.55rem;border-radius:8px}
+    .chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+    canvas{background:#111a34;border-radius:12px;padding:.5rem}
+    #journalEntries article{padding:1rem;margin:.7rem 0}
+    @media (max-width:860px){.app-layout{grid-template-columns:1fr}.sidebar{order:2}}
+  </style>
+</head>
+<body>
+  <section id="loginView" class="auth-shell">
+    <div class="brand-card glass">
+      <h1>TraderFitness</h1>
+      <p>Premium trader psychology + fitness discipline tracker.</p>
+      <ul>
+        <li>Track daily P/L, habits, mindset</li>
+        <li>Measure emotional and discipline performance</li>
+        <li>Journal mistakes and lessons learned</li>
+      </ul>
+      <button id="googleSignInBtn" class="btn-primary">Continue with Google</button>
+      <p class="subtle">Firebase Authentication</p>
+    </div>
+  </section>
+
+  <section id="appView" class="app-layout hidden">
+    <aside class="sidebar glass">
+      <h2>TraderFitness</h2>
+      <nav>
+        <a href="#" data-tab="dashboard" class="active nav-link">Dashboard</a>
+        <a href="#" data-tab="analytics" class="nav-link">Analytics</a>
+        <a href="#" data-tab="journal" class="nav-link">Journal</a>
+      </nav>
+      <div id="userProfile"></div>
+      <button id="logoutBtn" class="btn-secondary">Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <section id="dashboardTab" class="tab-panel">
+        <section class="calendar-section glass">
+          <h3>Daily Consistency Calendar</h3>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </section>
+        <section class="cards-grid" id="metricsGrid"></section>
+        <section class="daily-log glass">
+          <h3>Daily Reflection & Questions</h3>
+          <form id="dailyForm">
+            <div class="form-grid">
+              <label>Date <input type="date" id="entryDate" required /></label>
+              <label>Trades <input type="number" id="tradeCount" min="0" value="0" /></label>
+              <label>Profit / Loss ($) <input type="number" id="profitLoss" step="0.01" value="0" /></label>
+              <label>Win Trades <input type="number" id="winTrades" min="0" value="0" /></label>
+              <label>Loss Trades <input type="number" id="lossTrades" min="0" value="0" /></label>
+              <label>Risk Reward Ratio <input type="number" id="rr" min="0" step="0.1" value="1" /></label>
+              <label>Emotional Score (1-10) <input type="number" id="emotionalScore" min="1" max="10" value="5" /></label>
+              <label>Discipline Score (1-10) <input type="number" id="disciplineScore" min="1" max="10" value="5" /></label>
+              <label>Confidence Score (1-10) <input type="number" id="confidenceScore" min="1" max="10" value="5" /></label>
+              <label>Stress Score (1-10) <input type="number" id="stressScore" min="1" max="10" value="5" /></label>
+              <label>Focus Score (1-10) <input type="number" id="focusScore" min="1" max="10" value="5" /></label>
+              <label>Sleep Hours <input type="number" id="sleepHours" min="0" max="24" step="0.5" value="8" /></label>
+              <label>Water Intake (L) <input type="number" id="waterIntake" min="0" step="0.1" value="2" /></label>
+            </div>
+            <div class="questions">
+              <h4>Daily Questions</h4>
+              <label>Followed strategy? <select id="followStrategy"><option>Yes</option><option>No</option></select></label>
+              <label>Revenge trade? <select id="revengeTrade"><option>No</option><option>Yes</option></select></label>
+              <label>Overtrade? <select id="overtrade"><option>No</option><option>Yes</option></select></label>
+              <label>Respected stop loss? <select id="stopLoss"><option>Yes</option><option>No</option></select></label>
+              <label>Traded emotionally? <select id="tradeEmotionally"><option>No</option><option>Yes</option></select></label>
+              <label>Exercised today? <select id="exercise"><option>Yes</option><option>No</option></select></label>
+              <label>Meditated today? <select id="meditate"><option>Yes</option><option>No</option></select></label>
+              <label>Slept properly? <select id="sleepProperly"><option>Yes</option><option>No</option></select></label>
+              <label>Mistake <textarea id="mistake"></textarea></label>
+              <label>Lesson learned <textarea id="lesson"></textarea></label>
+              <label>Journal note <textarea id="journalNote"></textarea></label>
+              <label>Emotional note <textarea id="emotionalNote"></textarea></label>
+              <label>Upload screenshot <input id="screenshot" type="file" accept="image/*" /></label>
+            </div>
+            <button class="btn-primary" type="submit">Save Daily Entry</button>
+          </form>
+        </section>
+      </section>
+
+      <section id="analyticsTab" class="tab-panel hidden">
+        <h2>Performance Analytics</h2>
+        <div class="chart-grid">
+          <canvas id="weeklyProfitChart"></canvas>
+          <canvas id="monthlyPerformanceChart"></canvas>
+          <canvas id="emotionalTrendChart"></canvas>
+          <canvas id="disciplineTrendChart"></canvas>
+          <canvas id="fitnessCorrelationChart"></canvas>
+          <canvas id="streakHabitChart"></canvas>
+        </div>
+      </section>
+
+      <section id="journalTab" class="tab-panel hidden">
+        <section class="glass journal-section">
+          <h2>Daily Trading Journal</h2>
+          <div id="journalEntries"></div>
+        </section>
+      </section>
+    </main>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const byId = (id) => document.getElementById(id);
+    const metrics = ['Total Profit/Loss','Total Trades','Win Trades','Loss Trades','Win Rate %','Risk Reward Ratio','Emotional Score','Discipline Score','Confidence Score','Stress Score','Focus Score','Gym Completion Status','Meditation Status','Sleep Hours','Water Intake'];
+
+    function switchTab(tab){
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+      byId(tab + 'Tab').classList.remove('hidden');
+      document.querySelectorAll('.nav-link').forEach(a=>a.classList.remove('active'));
+      document.querySelector(`.nav-link[data-tab="${tab}"]`).classList.add('active');
+    }
+
+    document.querySelectorAll('.nav-link').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault();switchTab(a.dataset.tab);if(a.dataset.tab==='analytics')loadAnalytics();if(a.dataset.tab==='journal')loadJournal();}));
+    byId('googleSignInBtn').addEventListener('click', ()=>signInWithPopup(auth, provider));
+    byId('logoutBtn').addEventListener('click', ()=>signOut(auth));
+
+    let currentUser = null;
+    onAuthStateChanged(auth, async (user)=>{
+      currentUser = user;
+      if(!user){ byId('loginView').classList.remove('hidden'); byId('appView').classList.add('hidden'); return; }
+      byId('loginView').classList.add('hidden'); byId('appView').classList.remove('hidden');
+      byId('userProfile').innerHTML = `<img src="${user.photoURL}" width="44" style="border-radius:50%"/><p>${user.displayName}</p><small>${user.email}</small>`;
+      drawCalendar(); renderMetrics({}); byId('entryDate').valueAsDate = new Date();
+      await loadJournal();
+    });
+
+    byId('dailyForm').addEventListener('submit', async (e)=>{
+      e.preventDefault(); if(!currentUser) return;
+      const d = byId('entryDate').value;
+      const file = byId('screenshot').files[0];
+      let screenshotUrl = '';
+      if(file){ const sRef = ref(storage, `screenshots/${currentUser.uid}/${Date.now()}-${file.name}`); await uploadBytes(sRef, file); screenshotUrl = await getDownloadURL(sRef); }
+      const payload = {
+        date:d, tradeCount:+byId('tradeCount').value, profitLoss:+byId('profitLoss').value, winTrades:+byId('winTrades').value, lossTrades:+byId('lossTrades').value,
+        riskReward:+byId('rr').value, emotionalScore:+byId('emotionalScore').value, disciplineScore:+byId('disciplineScore').value, confidenceScore:+byId('confidenceScore').value,
+        stressScore:+byId('stressScore').value, focusScore:+byId('focusScore').value, sleepHours:+byId('sleepHours').value, waterIntake:+byId('waterIntake').value,
+        followStrategy:byId('followStrategy').value, revengeTrade:byId('revengeTrade').value, overtrade:byId('overtrade').value, stopLoss:byId('stopLoss').value,
+        tradeEmotionally:byId('tradeEmotionally').value, exercise:byId('exercise').value, meditate:byId('meditate').value, sleepProperly:byId('sleepProperly').value,
+        mistake:byId('mistake').value, lesson:byId('lesson').value, journalNote:byId('journalNote').value, emotionalNote:byId('emotionalNote').value, screenshotUrl
+      };
+      await setDoc(doc(db,'users',currentUser.uid,'entries',d), payload);
+      alert('Saved');
+      await loadJournal();
+    });
+
+    function drawCalendar(){ const grid = byId('calendarGrid'); const now=new Date(), y=now.getFullYear(), m=now.getMonth(); const days=new Date(y,m+1,0).getDate(); grid.innerHTML=''; for(let i=1;i<=days;i++){ const cell=document.createElement('button'); cell.className='day-cell'; cell.textContent=i; cell.onclick=()=>{byId('entryDate').value=`${y}-${String(m+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`; document.querySelectorAll('.day-cell').forEach(c=>c.classList.remove('active')); cell.classList.add('active');}; grid.appendChild(cell);} }
+    function renderMetrics(data){ const mg=byId('metricsGrid'); mg.innerHTML=''; metrics.forEach(k=>{ const v = data[k] ?? '-'; mg.innerHTML += `<article class="metric glass"><div class="label">${k}</div><div class="value">${v}</div></article>`; }); }
+    async function fetchEntries(){ const qy=query(collection(db,'users',currentUser.uid,'entries'), orderBy('date')); const snap=await getDocs(qy); return snap.docs.map(d=>d.data()); }
+
+    let charts = [];
+    function destroyCharts(){charts.forEach(c=>c.destroy()); charts=[];}
+    function mk(id,label,labels,data){ const ctx = byId(id); charts.push(new Chart(ctx,{type:'line',data:{labels,datasets:[{label,data,borderColor:'#6ee7ff',backgroundColor:'#6ee7ff33',fill:true,tension:.35}]},options:{plugins:{legend:{labels:{color:'#eaf0ff'}}},scales:{x:{ticks:{color:'#95a4c6'}},y:{ticks:{color:'#95a4c6'}}}}})); }
+    async function loadAnalytics(){ if(!currentUser) return; const entries=await fetchEntries(); const labels=entries.map(e=>e.date); destroyCharts(); mk('weeklyProfitChart','Weekly Profit',labels,entries.map(e=>e.profitLoss)); mk('monthlyPerformanceChart','Monthly Performance',labels,entries.map(e=>e.tradeCount)); mk('emotionalTrendChart','Emotional Score',labels,entries.map(e=>e.emotionalScore)); mk('disciplineTrendChart','Discipline Score',labels,entries.map(e=>e.disciplineScore)); mk('fitnessCorrelationChart','Fitness vs P/L',labels,entries.map(e=>(e.exercise==='Yes'?1:0)+(e.meditate==='Yes'?1:0)+e.profitLoss/100)); mk('streakHabitChart','Habit Consistency',labels,entries.map(e=>(e.followStrategy==='Yes'?1:0)+(e.stopLoss==='Yes'?1:0)+(e.overtrade==='No'?1:0))); }
+    async function loadJournal(){ if(!currentUser) return; const box=byId('journalEntries'); const entries=await fetchEntries(); box.innerHTML=entries.reverse().map(e=>`<article class="glass"><h4>${e.date}</h4><p><strong>Mistake:</strong> ${e.mistake||'-'}</p><p><strong>Lesson:</strong> ${e.lesson||'-'}</p><p><strong>Journal:</strong> ${e.journalNote||'-'}</p><p><strong>Emotion:</strong> ${e.emotionalNote||'-'}</p>${e.screenshotUrl?`<img src="${e.screenshotUrl}" style="max-width:100%;border-radius:10px"/>`:''}</article>`).join(''); }
+  </script>
+</body>
+</html>
