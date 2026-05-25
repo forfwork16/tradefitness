@@ -1,0 +1,12 @@
+:root { --bg:#0b1020; --panel:#121a31cc; --text:#eaf0ff; --muted:#95a4c6; --accent:#6ee7ff; --good:#16c784; --bad:#ff5d73; }
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui;background:radial-gradient(circle at top,#1a2755,var(--bg));color:var(--text)}
+.glass{background:var(--panel);backdrop-filter:blur(12px);border:1px solid #ffffff22;border-radius:16px;box-shadow:0 10px 30px #00000044}
+.auth-shell{min-height:100vh;display:grid;place-items:center;padding:1rem}.brand-card{max-width:560px;padding:2rem}
+.btn-primary,.btn-secondary{border:0;padding:.8rem 1rem;border-radius:10px;cursor:pointer;font-weight:600}.btn-primary{background:var(--accent)}.btn-secondary{background:#2c365a;color:#fff}
+.subtle{color:var(--muted)}
+.app-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;gap:1rem;padding:1rem}.sidebar{padding:1rem}.sidebar nav{display:grid;gap:.5rem;margin:1rem 0}.sidebar a{color:var(--text);text-decoration:none;padding:.6rem;border-radius:8px}.sidebar a.active,.sidebar a:hover{background:#ffffff14}
+.main-content{display:grid;gap:1rem}.calendar-section,.daily-log{padding:1rem}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.4rem}.day-cell{padding:.6rem;background:#ffffff10;border-radius:8px;cursor:pointer;text-align:center}.day-cell.active{outline:2px solid var(--accent)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem}.metric{padding:1rem}.metric .label{color:var(--muted);font-size:.9rem}.metric .value{font-size:1.5rem;font-weight:700}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}.questions{display:grid;gap:.6rem;margin:1rem 0}label{display:grid;gap:.3rem}input,select,textarea{background:#0d1530;border:1px solid #33406d;color:#fff;padding:.55rem;border-radius:8px}
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}canvas{background:#111a34;border-radius:12px;padding:.5rem}
+@media (max-width:860px){.app-layout{grid-template-columns:1fr}.sidebar{order:2}}
